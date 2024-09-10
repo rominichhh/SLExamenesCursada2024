@@ -1,7 +1,10 @@
 package com.example.examenescursada2024
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -37,6 +40,7 @@ class ListadoExamenActivity : AppCompatActivity() {
 
     private fun getExamenes(): MutableList<Examen> {
         var examenes: MutableList<Examen> = ArrayList()
+        /*
         examenes.add(Examen(1, "Ingenieria de Software 1", "2022-04-05"))
         examenes.add(Examen(2, "Algoritmos y Estructuras de Datos", "2022-04-07"))
         examenes.add(Examen(3, "Prueba de Software", "2022-04-08"))
@@ -55,7 +59,22 @@ class ListadoExamenActivity : AppCompatActivity() {
         examenes.add(Examen(16, "Algoritmos y Estructuras de Datos", "2022-04-07"))
         examenes.add(Examen(17, "Prueba de Software", "2022-04-08"))
         examenes.add(Examen(18, "Matematica", "2022-04-10"))
+        */
         return examenes
 
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_listado, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if(item.itemId == R.id.item_agregar){
+            val intent = Intent(this, AgregarExamenActivity::class.java)
+            startActivity(intent)
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 }

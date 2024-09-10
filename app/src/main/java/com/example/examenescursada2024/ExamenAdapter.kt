@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 
 class ExamenAdapter(var examenes: MutableList<Examen>, var context: Context):
@@ -33,5 +34,10 @@ class ExamenAdapter(var examenes: MutableList<Examen>, var context: Context):
         val item = examenes.get(position)
         holder.txtMateria.text = item.materia
         holder.txtFecha.text = item.fecha
+
+        holder.itemView.setOnClickListener(View.OnClickListener {
+            Toast.makeText(context, item.materia, Toast.LENGTH_LONG).show()
+            }
+        )
     }
 }

@@ -6,7 +6,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
 import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -14,60 +13,57 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
-class MainActivity : AppCompatActivity() {
+class AgregarExamenActivity : AppCompatActivity() {
 
-    lateinit var etNota1: EditText
-    lateinit var etNota2: EditText
-    lateinit var btnPromedio: Button
-    lateinit var tvResultado: TextView
     lateinit var toolbar: Toolbar
+    lateinit var etMateria: EditText
+    lateinit var etFecha: EditText
+    lateinit var btnAgregar: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_agregar_examen)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
-        etNota1 = findViewById(R.id.editNota1)
-        etNota2 = findViewById(R.id.editNota2)
-        btnPromedio = findViewById(R.id.btnPromedio)
-        tvResultado = findViewById(R.id.tvResultado)
         toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar!!.title = resources.getString(R.string.titulo)
 
-        btnPromedio.setOnClickListener {
-            var numero1 = etNota1.text.toString()
-            var numero2 = etNota2.text.toString()
-            var promedio = (numero1.toInt() + numero2.toInt())/2
-            tvResultado.text = promedio.toString()
-        }
-        saludarUsuario()
-    }
+        etMateria = findViewById(R.id.etMateria)
+        etFecha = findViewById((R.id.etFecha))
+        btnAgregar = findViewById(R.id.btnGuardar)
 
+        btnAgregar.setOnClickListener {
+            var materia = etMateria.text.toString()
+            var fecha = etFecha.text.toString()
+
+            if(materia.isEmpty() || fecha.isEmpty()){
+                Toast.makeText(this, "Es necesario completar todos los datos", Toast.LENGTH_SHORT).show()
+            } else {
+                var nuevoExamen = Examen(materia, fecha)
+                AppDatabase.getDatabase(applicationContext).examenDao().insert(nuevoExamen)
+                var intentListado = Intent(this, ListadoExamenActivity::class.java)
+                startActivity(intentListado)
+            }
+        }
+
+    }
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.main_manu, menu)
+        menuInflater.inflate(R.menu.menu_add, menu)
         return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if(item.itemId == R.id.item_listado){
-            val intent = Intent(this, ListadoExamenActivity::class.java)
+        if (item.itemId == R.id.item_volver){
+            var intent = Intent(this, ListadoExamenActivity::class.java)
             startActivity(intent)
         }
-        return super.onOptionsItemSelected(item)
-    }
 
-    private fun saludarUsuario() {
-        val bundle: Bundle? = intent.extras
-        if(bundle != null){
-            val nombreUsuario = bundle?.getString(resources.getString(R.string.nombre_usuario))
-            Toast.makeText(this, "Bienvenido/a $nombreUsuario", Toast.LENGTH_LONG).show()
-        }
+        return super.onOptionsItemSelected(item)
     }
 }
